@@ -41,11 +41,16 @@ export const Container = styled.div<PropsWithIconNameType>`
   background: ${({ iconName }) => themeColorsByIconName[iconName].background};
   color: ${({ iconName }) => themeColorsByIconName[iconName].dark};
   
-  max-width: 300px;
+  width: 300px;
+  height: 520px;
   margin: 1rem;
   padding: 1rem;
   font-size: 2rem;
   border-radius: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const Header = styled.div<PropsWithIconNameType>`
@@ -56,9 +61,9 @@ export const Header = styled.div<PropsWithIconNameType>`
   justify-content: space-between;
 `;
 
-export const HeaderHour = styled.div``;
+export const HeaderHour = styled.p``;
 
-export const HeaderDate = styled.div``;
+export const HeaderDate = styled.p``;
 
 export const Content = styled.div`
   display: flex;
@@ -69,12 +74,12 @@ export const Content = styled.div`
 
 export const Image = styled.img``;
 
-export const Temperature = styled.div`
+export const Temperature = styled.p`
   margin-bottom: 0.75rem;
   font-weight: 500;
 `;
 
-export const Description = styled.div`
+export const Description = styled.p`
   font-weight: 500;
 `;
 
@@ -102,6 +107,6 @@ export const Location = styled.div`
   font-weight: 500;
 `;
 
-export const City = styled.div``;
+export const City = styled.p``;
 
-export const Country = styled.div``;
+export const Country = styled.p``;
