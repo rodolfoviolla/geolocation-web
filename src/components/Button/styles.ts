@@ -6,7 +6,7 @@ import { ButtonStyleProps } from "./interface";
 
 export const ButtonStyle = styled.div<ButtonStyleProps>`
   border-radius: 1rem;
-  border: 1px solid ${({ iconName }) => themeColorsByIconName[iconName].dark};
+  border: 2px solid ${({ iconName }) => themeColorsByIconName[iconName].light};
   
   height: 2rem;
   width: 75%;
@@ -26,12 +26,12 @@ export const ButtonStyle = styled.div<ButtonStyleProps>`
   ${({ disabled, iconName }) =>
     disabled 
     ? css`
-      background: ${shade(0.2, themeColorsByIconName[iconName].dark)};
+      background: ${shade(0.3, themeColorsByIconName[iconName].light)};
       cursor: default;
     `
     : css`
       &:hover {
-        background: ${shade(0.2, themeColorsByIconName[iconName].dark)};
+        background: ${shade(0.1, themeColorsByIconName[iconName].light)};
       }
     `
   }
