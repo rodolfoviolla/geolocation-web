@@ -24,7 +24,6 @@ export const getFormattedWeather: GetFormattedWeatherFnType = async (coords) => 
   const { main: { temp }, weather } = await openWeather.getCurrentWeatherByCoords(coords);
 
   return { 
-    // ...{ ...weather[0], icon: '01d' },
     ...weather[0], 
     temperature: Math.round(temp) 
   };

@@ -1,27 +1,45 @@
 import { format, getHours } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react"
 import PuffLoader from 'react-spinners/PuffLoader';
-import { Button } from "../../components/Button";
 
+import { Button } from "../../components/Button";
 import { OPEN_WEATHER_URL } from "../../constants";
 import { AddressType } from "../../services/googleMapsApi/interface";
 import { WeatherType } from "../../services/openWeatherApi/interface";
+
 import { LoadingHomePagePropsType } from "./interface";
 import { getFormattedAddress, getFormattedWeather } from "./props";
-
-import { Address, City, Container, Content, Country, HeaderDate, Description, Footer, Header, HeaderHour, Image, Location, Temperature, Divider, spinnerProps } from "./styles";
+import { 
+  Address,
+  City,
+  Container,
+  Content,
+  Country,
+  HeaderDate,
+  Description,
+  Footer,
+  Header,
+  HeaderHour,
+  Image,
+  Location,
+  Temperature,
+  Divider,
+  spinnerProps
+} from "./styles";
 
 function LoadingHomePage({ isDayTime, formattedCurrHour, formattedCurrDate }: LoadingHomePagePropsType) {
+  const iconName = isDayTime ? '01d' : '01n';
+
   return (
-    <Container iconName={isDayTime ? '01d' : '01n'}>
-      <Header iconName={isDayTime ? '01d' : '01n'}>
+    <Container iconName={iconName}>
+      <Header iconName={iconName}>
         <HeaderHour>{formattedCurrHour}</HeaderHour>
         <HeaderDate>{formattedCurrDate}</HeaderDate>
       </Header>
       <Content>
-        <PuffLoader {...spinnerProps(isDayTime ? '01d' : '01n')} />
+        <PuffLoader {...spinnerProps(iconName)} />
         <Description>Carregando</Description>
-        <Button iconName={isDayTime ? '01d' : '01n'} text="Atualizar" disabled />
+        <Button iconName={iconName} text="Atualizar" disabled />
       </Content>
       <Divider />
       <Footer />
@@ -64,7 +82,10 @@ export function Home() {
     });
   };
 
-  const weatherIconUrl = useMemo(() => weather?.icon ? `${OPEN_WEATHER_URL}/img/wn/${weather.icon}@4x.png` : '', [weather?.icon]);
+  const weatherIconUrl = useMemo(
+    () => weather?.icon ? `${OPEN_WEATHER_URL}/img/wn/${weather.icon}@4x.png` : '', 
+    [weather?.icon]
+  );
 
   const hasCoords = coords?.latitude && coords?.longitude;
   const hasAddress = address?.formattedAddress && address?.city && address?.country;
@@ -77,7 +98,15 @@ export function Home() {
   const currHour = getHours(new Date());
   const isDayTime = currHour > 6 && currHour < 19;
 
-  if (isLoading) return <LoadingHomePage isDayTime={isDayTime} formattedCurrHour={formattedCurrHour} formattedCurrDate={formattedCurrDate} />;
+  if (isLoading) {
+    return (
+      <LoadingHomePage 
+        isDayTime={isDayTime} 
+        formattedCurrHour={formattedCurrHour} 
+        formattedCurrDate={formattedCurrDate} 
+      />
+    );
+  };
 
   return (
     <Container iconName={weather.icon}>
