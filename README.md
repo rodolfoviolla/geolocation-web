@@ -1,46 +1,70 @@
-# Getting Started with Create React App
+## Geolocation App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application is able to get your current address and the weather in your location, based on your latitude and longitude.
 
-## Available Scripts
+A demo version is hosted [here](https://geolocation-web.vercel.app/).
 
-In the project directory, you can run:
+---
 
-### `yarn start`
+### How to run locally
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+# Clone this repository
+$ git clone <git@github.com:rodolfoviolla/geolocation-web.git>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Access project folder
+$ cd geolocation-web
 
-### `yarn test`
+# Install dependencies
+$ yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Copy the .env file
+$ cp .env.example .env
 
-### `yarn build`
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- To continue, you must fill the [Google Maps API](https://console.cloud.google.com/google/maps-apis/credentials) and [Open Weather API](https://home.openweathermap.org/api_keys) variables with your `API tokens`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+REACT_APP_GOOGLE_MAPS_API_TOKEN=
+REACT_APP_OPEN_WEATHER_API_TOKEN=
+```
+- Finally, you can run the application
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+# Execute the development server
+$ yarn start
 
-### `yarn eject`
+# The application will run on port 3000 - access <http://localhost:3000>
+```
+---
+### Techs
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The following tools are used to build this project:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [ReactJS](https://pt-br.reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Styled Components](https://styled-components.com/)
+- [Axios](https://axios-http.com/)
+### Author
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<p>
+  <a href="#">
+    <img src="https://avatars1.githubusercontent.com/u/64096832?s=460&u=b785643ea39e67bb0f05c9f4d43e478b7029c807&v=4" height="100px" width="100px" style="border-radius:50px" alt="Rodolfo's profile picture"/>
+    <br />
+    <sub><b>Rodolfo Della Violla</b></sub>
+  </a>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+  <p>
+    <a href="https://www.linkedin.com/in/rodolfoviolla/">
+      <img alt="LinkedIn" src="https://img.shields.io/badge/-LinkedIn-%237159c1?style=flat&logo=linkedin">
+    </a>
+    <a href="https://twitter.com/RodolfoViolla">
+      <img alt="Twitter" src="https://img.shields.io/badge/-Twitter-%237159c1?style=flat&logo=twitter">
+    </a>
+    <a href="mailto:rodolfo.violla@gmail.com">
+      <img alt="Gmail" src="https://img.shields.io/badge/-Email-%237159c1?style=flat&logo=gmail">
+    </a>
+  </p>
+</p>
