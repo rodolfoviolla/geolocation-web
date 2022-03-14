@@ -1,18 +1,28 @@
 import { format } from "date-fns";
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import PuffLoader from 'react-spinners/PuffLoader';
 
-import { GOOGLE_MAPS_API_TOKEN, OPEN_WEATHER_API_TOKEN, OPEN_WEATHER_URL } from "../../constants";
-import { googleMapsApi } from "../../services/googleMapsApi";
-import { openWeatherApi } from "../../services/openWeatherApi";
+import { OPEN_WEATHER_URL } from "../../constants";
+import { AddressType } from "../../services/googleMapsApi/interface";
+import { WeatherType } from "../../services/openWeatherApi/interface";
+import { getFormattedAddress, getFormattedWeather } from "./props";
 
-import { AddressType, GoogleMapsResponseDataType, WeatherType } from "./interface";
-import { Address, City, Container, Content, Country, HeaderDate, Description, Footer, Header, HeaderHour, Image, Location, Temperature, Divider } from "./styles";
+import { Address, City, Container, Content, Country, HeaderDate, Description, Footer, Header, HeaderHour, Image, Location, Temperature, Divider, spinnerProps } from "./styles";
 
 export function Home() {
   const [coords, setCoords] = useState<GeolocationCoordinates>();
   const [address, setAddress] = useState<AddressType>();
   const [weather, setWeather] = useState<WeatherType>();
-  const [temperature, setTemperature] = useState<Number>();
+
+  const fetchDataFromCoords = async (coords?: GeolocationCoordinates) => {
+    if (!coords?.latitude || !coords?.longitude) return;
+    
+    const fetchedAddress = await getFormattedAddress(coords);
+    const fetchedWeather = await getFormattedWeather(coords);
+
+    setAddress(fetchedAddress);
+    setWeather(fetchedWeather);
+  }
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
@@ -21,48 +31,21 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    if (!coords?.latitude || !coords?.longitude) return;
-    
-    const { latitude, longitude } = coords;
-
-    const getAddress = async () => {
-      const { data } = await googleMapsApi.get<GoogleMapsResponseDataType>(`geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_TOKEN}`);
-      const fetchedAddress = data.results[0];
-
-      const newAddress = fetchedAddress.address_components
-        .filter(({ types }) => types.includes('country') || types.includes('administrative_area_level_2'))
-        .reduce((prev, curr) => {
-          const newValue = { [curr.types.includes('administrative_area_level_2') ? 'city' : 'country']: curr.short_name };
-
-          return { ...prev, ...newValue };
-        }, { city: '', country: '' });
-      
-      setAddress({ formattedAddress: fetchedAddress.formatted_address, ...newAddress  });
-    };
-
-    const getCurrentWeather = async () => {
-      const { data } = await openWeatherApi.get(`weather?units=metric&lang=pt_br&lat=${latitude}&lon=${longitude}&appid=${OPEN_WEATHER_API_TOKEN}`);
-
-      // setWeather({ ...data.weather[0], icon: '01n' });
-      setWeather(data.weather[0]);
-      setTemperature(Math.round(data.main.temp));
-    }
-
-    getAddress();
-    getCurrentWeather();
+    fetchDataFromCoords(coords);
   }, [coords]);
+
+  const weatherIconUrl = useMemo(() => weather?.icon ? `${OPEN_WEATHER_URL}/img/wn/${weather.icon}@4x.png` : '', [weather?.icon]);
 
   const hasCoords = coords?.latitude && coords?.longitude;
   const hasAddress = address?.formattedAddress && address?.city && address?.country;
   const hasWeather = weather?.icon && weather?.description;
-  const hasTemperature = temperature !== undefined;
+  const hasTemperature = weather?.temperature !== undefined;
   const isLoading = !hasCoords || !hasAddress || !hasWeather || !hasTemperature;
 
   if (isLoading) return <h3>Carregando...</h3>;
 
   const currDate = format(new Date(), 'dd LLL');
   const currHour = format(new Date(), 'HH:mm');
-  const weatherIconUrl = `${OPEN_WEATHER_URL}/img/wn/${weather.icon}@4x.png`;
 
   return (
     <Container iconName={weather.icon}>
@@ -71,9 +54,8 @@ export function Home() {
         <HeaderDate>{currDate}</HeaderDate>
       </Header>
       <Content>
-        <Image src={weatherIconUrl} alt="weather icon" />
-        <Image />
-        <Temperature>{temperature}°C</Temperature>
+        {!weatherIconUrl ? <Image src={weatherIconUrl} alt="weather icon" /> : <PuffLoader {...spinnerProps(weather.icon)} />}
+        <Temperature>{weather.temperature}°C</Temperature>
         <Description>{weather.description}</Description>
       </Content>
       <Divider />

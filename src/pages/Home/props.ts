@@ -1,24 +1,31 @@
-import { colors, linearGradient } from "../../styles/colors";
+import { GoogleMapsResponseResultsType } from "../../services/googleMapsApi/interface";
+import googleMaps from "../../services/googleMapsApi/resources";
+import openWeather from "../../services/openWeatherApi/resources";
 
-const { black, darkBlue, darkGray, darkWhite, lightBlue, lightGray, lightWhite } = colors;
+import { GetFormattedAddressFnType, GetFormattedWeatherFnType } from "./interface";
 
-export const themeColorsByIconName = {
-  '01d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '01n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '02d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '02n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '03d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '03n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '04d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '04n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '09d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '09n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '10d': { background: linearGradient(lightBlue, darkBlue), light: lightWhite, dark: darkGray },
-  '10n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '11d': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '11n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '13d': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '13n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '50d': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
-  '50n': { background: linearGradient(lightGray, black), dark: darkWhite, light: black },
+const formatLocationData = (fetchedAddress: GoogleMapsResponseResultsType) => fetchedAddress.address_components
+  .filter(({ types }) => types.includes('country') || types.includes('administrative_area_level_2'))
+  .reduce((prev, curr) => {
+    const newValue = { [curr.types.includes('administrative_area_level_2') ? 'city' : 'country']: curr.short_name };
+
+    return { ...prev, ...newValue };
+  }, { city: '', country: '' });
+
+export const getFormattedAddress: GetFormattedAddressFnType = async (coords) => {
+  const { results } = await googleMaps.getAddressByCoords(coords);
+  const fetchedAddress = results[0];
+  const location = formatLocationData(fetchedAddress);
+
+  return { formattedAddress: fetchedAddress.formatted_address, ...location  };
 };
+
+export const getFormattedWeather: GetFormattedWeatherFnType = async (coords) => {
+  const { main: { temp }, weather } = await openWeather.getCurrentWeatherByCoords(coords);
+
+  return { 
+    // ...{ ...weather[0], icon: '01d' },
+    ...weather[0], 
+    temperature: Math.round(temp) 
+  };
+}
