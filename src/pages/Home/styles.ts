@@ -42,7 +42,7 @@ export const Container = styled.div<PropsWithIconNameType>`
   color: ${({ iconName }) => themeColorsByIconName[iconName].dark};
   
   width: 300px;
-  height: 520px;
+  min-height: 520px;
   margin: 1rem;
   padding: 1rem;
   font-size: 2rem;
