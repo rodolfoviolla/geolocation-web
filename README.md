@@ -2,8 +2,6 @@
 
 This application is able to get your current address and the weather in your location, based on latitude and longitude provided by your device's GPS.
 
-A demo version is hosted [here](https://geolocation-web.vercel.app/).
-
 ---
 
 ### How to run locally
